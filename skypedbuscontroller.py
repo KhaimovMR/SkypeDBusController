@@ -29,7 +29,9 @@ def main():
 	answer = skypeService.Invoke('PROTOCOL 8')
 
 	if answer != 'PROTOCOL 8':
-		sys.exit('This test program only supports Skype API protocol version 1.')
+		sys.exit('This test program only supports Skype API protocol version 1.')	
+	
+	i = 0
 
 	for arg in sys.argv:
 		if arg == 'manualMode':
@@ -72,13 +74,19 @@ def main():
 				if len(recentChats) and len(recentChats[0]):
 					skypeService.Invoke('OPEN CHAT ' + str(recentChats[0]))
 		elif arg == 'showContacts':
+			try:
+				username = sys.argv[i+1]
+			except IndexError:
+				print('Skype username is not defined.')
+				return 1
+
 			focusedWindowId = check_output('xdotool getwindowfocus', shell=True)
 			result = skypeService.Invoke('GET WINDOWSTATE')
 
 			if result != 'WINDOWSTATE NORMAL':
 				skypeService.Invoke('SET WINDOWSTATE NORMAL')
 
-			contactsWindowId = check_output('xdotool search --name "khaimovmr - Skype."', shell=True)
+			contactsWindowId = check_output('xdotool search --name "' + str(username) + ' - Skype."', shell=True)
 
 			if focusedWindowId == contactsWindowId:
 				skypeService.Invoke('SET WINDOWSTATE HIDDEN')
@@ -86,6 +94,8 @@ def main():
 				call('xdotool search --name "khaimovmr - Skype." windowactivate', shell=True)
 		else:
 			skypeService.Invoke(arg)
+
+		i += 1
 
 if __name__ == '__main__':
 	main()
