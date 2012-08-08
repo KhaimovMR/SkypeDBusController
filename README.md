@@ -22,7 +22,7 @@ with an appropriate parameter.
 
 LIST OF PARAMETERS:
 
-showContacts <login>    - shows/hides Skype's Contacts window. <login> is your
+showContacts login      - shows/hides Skype's Contacts window. <login> is your
                           skype login, that usually prefixes Contacts window.
 
 recentChat              - shows a window with recently participated chat
