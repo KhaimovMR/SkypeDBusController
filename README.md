@@ -24,10 +24,15 @@ LIST OF PARAMETERS:
 
 showContacts <login>	- shows/hides Skype's Contacts window. <login> is your
 			  skype login, that usually prefixes Contacts window.
+
 recentChat		- shows a window with recently participated chat
+
 firstMissedChat		- opens a window with first missed message
+
 pickUp			- picks up an incoming call
+
 hangUpAll		- hangs up all incoming calls (including calls on the hold)
+
 manualMode		- lets you manually send a DBus command to a running Skype process
 
 EXAMPLES:
