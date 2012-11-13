@@ -91,7 +91,7 @@ def main():
 			if focusedWindowId == contactsWindowId:
 				skypeService.Invoke('SET WINDOWSTATE HIDDEN')
 			else:
-				call('xdotool search --name "khaimovmr - Skype." windowactivate', shell=True)
+				call('xdotool search --name "'+str(username)+' - Skype." windowactivate', shell=True)
 		else:
 			skypeService.Invoke(arg)
 
