@@ -50,7 +50,7 @@ def main():
                 result = skypeService.Invoke(cmd.upper())
                 print result + "\n"
 
-        if arg == 'hangUpAll':
+        if arg == 'hangUp':
             result = skypeService.Invoke('SEARCH ACTIVECALLS')
 
             if result[0:6] == 'CALLS ':
@@ -62,7 +62,7 @@ def main():
             if result[0:6] == 'CALLS ':
                 for id in result[6:].split(' '):
                     skypeService.Invoke('ALTER CALL ' + str(id) + ' ANSWER')
-        elif arg == 'firstMissedChat':
+        elif arg == 'missedChat':
             result = skypeService.Invoke('SEARCH MISSEDCHATS')
             missedChats = ''
 
