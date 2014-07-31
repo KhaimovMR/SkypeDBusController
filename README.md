@@ -22,22 +22,22 @@ with an appropriate parameter.
 
 LIST OF PARAMETERS:
 
-showContacts login      - shows/hides Skype's Contacts window. <login> is your
-                          skype login, that usually prefixes Contacts window.
+show <login>      - shows/hides Skype's Contacts window. <login> is your
+                    skype login, that usually prefixes Contacts window.
 
-recentChat              - shows a window with recently participated chat
+recent            - shows a window with recently participated chat
 
-missedChat         - opens a window with first missed message
+missed            - opens a window with first missed message
 
-pickUp                  - picks up an incoming call
+pick-up           - picks up an incoming call
 
-hangUp               - hangs up all incoming calls (including calls on the hold)
+hang-up           - hangs up all incoming calls (including calls on the hold)
 
-manualMode              - lets you manually send a DBus command to a running Skype process
+manual-mode       - lets you manually send a DBus command to a running Skype process
 
 EXAMPLES:
 - To run script from it's custom directory
-    ./skypedbuscontrol.py recentChat
+    ./skypedbuscontrol.py recent
 - To run script when it's already in the /usr/bin/ or ~/bin/ directory
-    skypedbuscontrol.py pickUp
-    skypedbuscontrol.py showContacts myskypelogin
+    skypedbuscontrol.py pick-up
+    skypedbuscontrol.py show myskypelogin
