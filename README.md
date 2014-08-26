@@ -37,7 +37,7 @@ manual-mode       - lets you manually send a DBus command to a running Skype pro
 
 EXAMPLES:
 - To run script from it's custom directory
-    ./skypedbuscontrol.py recent
+    ./skypedbusctrl.py recent
 - To run script when it's already in the /usr/bin/ or ~/bin/ directory
-    skypedbuscontrol.py pick-up
-    skypedbuscontrol.py show myskypelogin
+    skypedbusctrl.py pick-up
+    skypedbusctrl.py show myskypelogin
