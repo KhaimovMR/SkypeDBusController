@@ -1,38 +1,36 @@
 #!/usr/bin/env python2.7
 # -*- coding: utf-8 -*-
-import dbus, sys, os, dbus.proxies
+import dbus
+import sys
+import dbus.proxies
 from subprocess import call
 from subprocess import check_output
 
+
 def main():
-    """
-    @type sessionBus: dbus.SessionBus
-    """
-    sessionBus = dbus.SessionBus()
+    # @type session_bus: dbus.SessionBus
+    session_bus = dbus.SessionBus()
 
     # Check if Skype is running
-    systemServiceList = sessionBus.get_object('org.freedesktop.DBus', '/org/freedesktop/DBus').ListNames()
-    skypeApiFound = 0
+    system_service_list = session_bus.get_object('org.freedesktop.DBus', '/org/freedesktop/DBus').ListNames()
+    skype_api_found = 0
 
-    for service in systemServiceList:
+    for service in system_service_list:
         if service == 'com.Skype.API':
-            skypeApiFound = 1
+            skype_api_found = 1
             break
 
-    if not skypeApiFound:
-        #sys.exit('Skype with DBus support running not found.')
-        os.spawnl(os.P_NOWAIT, 'skype')
+    if not skype_api_found:
+        exit(1)
 
-    """
-    @type skypeService: dbus.proxies.ProxyObject
-    """
-    skypeService = sessionBus.get_object('com.Skype.API', '/com/Skype')
-    answer = skypeService.Invoke('Name SkypeApiClient')
+    # @type skype_service: dbus.proxies.ProxyObject
+    skype_service = session_bus.get_object('com.Skype.API', '/com/Skype')
+    answer = skype_service.Invoke('Name SkypeApiClient')
 
     if answer != 'OK':
         sys.exit('Could not bind to Skype client.')
 
-    answer = skypeService.Invoke('PROTOCOL 8')
+    answer = skype_service.Invoke('PROTOCOL 8')
 
     if answer != 'PROTOCOL 8':
         sys.exit('This test program only supports Skype API protocol version 1.')    
@@ -42,43 +40,43 @@ def main():
     for arg in sys.argv:
         if arg == 'manual-mode':
             while True:
-                cmd = raw_input('Введите команду: ')
+                cmd = raw_input('Type your command: ')
 
                 if cmd == '' or cmd == '^[':
                     break
 
-                result = skypeService.Invoke(cmd.upper())
+                result = skype_service.Invoke(cmd.upper())
                 print result + "\n"
 
         if arg == 'hang-up':
-            result = skypeService.Invoke('SEARCH ACTIVECALLS')
+            result = skype_service.Invoke('SEARCH ACTIVECALLS')
 
-            if result[0:6] == 'CALLS ':
+            if result[:6] == 'CALLS ':
                 for id in result[6:].split(' '):
-                    skypeService.Invoke('SET CALL ' + str(id) + ' STATUS FINISHED')
+                    skype_service.Invoke('SET CALL ' + str(id) + ' STATUS FINISHED')
         elif arg == 'pick-up':
-            result = skypeService.Invoke('SEARCH ACTIVECALLS')
+            result = skype_service.Invoke('SEARCH ACTIVECALLS')
 
-            if result[0:6] == 'CALLS ':
+            if result[:6] == 'CALLS ':
                 for id in result[6:].split(' '):
-                    skypeService.Invoke('ALTER CALL ' + str(id) + ' ANSWER')
+                    skype_service.Invoke('ALTER CALL ' + str(id) + ' ANSWER')
         elif arg == 'missed':
-            result = skypeService.Invoke('SEARCH MISSEDCHATS')
-            missedChats = ''
+            result = skype_service.Invoke('SEARCH MISSEDCHATS')
+            missed_chats = ''
 
-            if result[0:6] == 'CHATS ':
-                missedChats = result[6:].split(', ')
+            if result[:6] == 'CHATS ':
+                missed_chats = result[6:].split(', ')
 
-            if len(missedChats) and len(missedChats[0]):
-                skypeService.Invoke('OPEN CHAT ' + str(missedChats[0]))
+            if missed_chats and len(missed_chats[0]):
+                skype_service.Invoke('OPEN CHAT ' + str(missed_chats[0]))
         elif arg == 'recent':
-            result = skypeService.Invoke('SEARCH RECENTCHATS')
+            result = skype_service.Invoke('SEARCH RECENTCHATS')
 
-            if result[0:6] == 'CHATS ':
-                recentChats = result[6:].split(', ')
+            if result[:6] == 'CHATS ':
+                recent_chats = result[6:].split(', ')
 
-                if len(recentChats) and len(recentChats[0]):
-                    skypeService.Invoke('OPEN CHAT ' + str(recentChats[0]))
+                if len(recent_chats) and len(recent_chats[0]):
+                    skype_service.Invoke('OPEN CHAT ' + str(recent_chats[0]))
         elif arg == 'contacts':
             try:
                 username = sys.argv[i+1]
@@ -86,20 +84,20 @@ def main():
                 print('Skype username is not defined.')
                 return 1
 
-            focusedWindowId = check_output('xdotool getwindowfocus', shell=True)
-            result = skypeService.Invoke('GET WINDOWSTATE')
+            focused_window_id = check_output('xdotool getwindowfocus', shell=True)
+            result = skype_service.Invoke('GET WINDOWSTATE')
 
             if result != 'WINDOWSTATE NORMAL':
-                skypeService.Invoke('SET WINDOWSTATE NORMAL')
+                skype_service.Invoke('SET WINDOWSTATE NORMAL')
 
-            contactsWindowId = check_output('xdotool search --name "' + str(username) + ' - Skype.*"', shell=True)
+            contacts_window_id = check_output('xdotool search --name "' + str(username) + ' - Skype.*"', shell=True)
 
-            if focusedWindowId == contactsWindowId:
-                skypeService.Invoke('SET WINDOWSTATE HIDDEN')
+            if focused_window_id == contacts_window_id:
+                skype_service.Invoke('SET WINDOWSTATE HIDDEN')
             else:
                 call('xdotool search --name "'+str(username)+' - Skype." windowactivate', shell=True)
         else:
-            skypeService.Invoke(arg)
+            skype_service.Invoke(arg)
 
         i += 1
 
